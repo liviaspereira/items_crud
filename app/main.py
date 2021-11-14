@@ -1,22 +1,21 @@
+import os
 from typing import Optional
-
 from fastapi import FastAPI, status, HTTPException
-
-from pydantic import BaseModel
-
 from sqlmodel import Field, SQLModel, create_engine, Session, select
+from dotenv import load_dotenv
 
+load_dotenv()  # take environment variables from .env.
 
-class Item(SQLModel, table=True):
+DATABASE_URL = os.getenv("DATABASE_URL")
+class Item(SQLModel, table=True): 
     name: str
     description: Optional[str] = "Padrão"
     price: float
     tax: Optional[float] = None
     id: Optional[int] = Field(default=None, primary_key=True)
 
-postgres_url = "postgresql://postgres:123@localhost:5432/postgres"
-engine = create_engine(postgres_url, echo=True)
-SQLModel.metadata.create_all(engine)
+engine = create_engine(DATABASE_URL, echo=True)
+SQLModel.metadata.create_all(engine)  
 
 app = FastAPI()
 
@@ -24,7 +23,6 @@ app = FastAPI()
 @app.get("/items/")
 def list_items():
     with Session(engine) as session:
-        statement = select(Item)
         results = session.exec(select(Item)).all()
     return results
 

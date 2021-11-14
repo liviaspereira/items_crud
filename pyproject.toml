@@ -9,6 +9,7 @@ python = "^3.9"
 fastapi = {extras = ["all"], version = "^0.70.0"}
 sqlmodel = "^0.0.4"
 psycopg2 = "^2.9.2"
+python-dotenv = "^0.19.2"
 
 [tool.poetry.dev-dependencies]
 
